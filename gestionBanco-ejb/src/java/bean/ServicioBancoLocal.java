@@ -13,5 +13,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface ServicioBancoLocal {
+
+    void agregarCliente(String rut, String nombre, String ciudad, String codigo);
     
 }

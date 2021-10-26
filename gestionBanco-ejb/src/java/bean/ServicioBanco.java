@@ -1,19 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bean;
 
 import javax.ejb.Stateless;
+import modelo.*;
 
-/**
- *
- * @author tozcu
- */
 @Stateless
 public class ServicioBanco implements ServicioBancoLocal {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    
+    private Banco miBanco = new Banco();
+    
+    @Override
+    public void agregarCliente(String rut, String nombre, String ciudad, String codigo) {
+        Cuenta cta = new Cuenta(codigo, 0);
+        Cliente cli = new Cliente(rut, nombre, ciudad, cta);
+        miBanco.agregarCliente(cli);
+    }
+    
 }
