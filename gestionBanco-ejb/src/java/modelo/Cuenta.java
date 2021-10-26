@@ -27,7 +27,7 @@ public class Cuenta {
         }
     }
     
-    public void girar(int monto){
+    public void retirar(int monto){
         if(saldo >= monto){
             saldo -= monto; 
         }

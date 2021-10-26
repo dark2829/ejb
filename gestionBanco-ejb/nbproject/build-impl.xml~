@@ -49,7 +49,12 @@ is divided into following sections:
         <property file="nbproject/project.properties"/>
     </target>
     <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-init-macrodef-property" name="-do-init">
-        <ejbjarproject1:property name="platform.home" value="platforms.${platform.active}.home"/>
+       <condition
+  property="platform.home"
+  value="${java.home}/../"
+  else="platforms.${platform.active}.home">
+      <equals arg1="${platform.active}" arg2="default_platform" />
+</condition>
         <ejbjarproject1:property name="platform.bootcp" value="platforms.${platform.active}.bootclasspath"/>
         <ejbjarproject1:property name="platform.compiler" value="platforms.${platform.active}.compile"/>
         <ejbjarproject1:property name="platform.javac.tmp" value="platforms.${platform.active}.javac"/>
@@ -822,20 +827,16 @@ exists or setup the property manually. For example like this:
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
     <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
         <copyfiles files="${libs.javaee-web-api-6.0.classpath}" todir="${build.classes.dir}"/>
-        <copyfiles files="${libs.javaee-api-6.0.classpath}" todir="${build.classes.dir}"/>
     </target>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
         <basename file="${libs.javaee-web-api-6.0.classpath}" property="manifest.libs.javaee-web-api-6.0.classpath"/>
-        <basename file="${libs.javaee-api-6.0.classpath}" property="manifest.libs.javaee-api-6.0.classpath"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 "/>
+            <attribute name="Extension-List" value="jar-1 "/>
             <attribute name="jar-1-Extension-Name" value="${manifest.libs.javaee-web-api-6.0.classpath}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.libs.javaee-api-6.0.classpath}"/>
         </manifest>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
         <copyfiles files="${libs.javaee-web-api-6.0.classpath}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.javaee-api-6.0.classpath}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target name="-copy-meta-inf">
@@ -1124,7 +1125,7 @@ exists or setup the property manually. For example like this:
         </copy>
     </target>
     <target depends="init,javadoc-build" if="netbeans.home" name="javadoc-browse" unless="no.javadoc.preview">
-        <nbbrowse file="${dist.javadoc.dir}/index.html"/>
+        <nbbrowse file="${dist.javadoc.dir}/index.jsp"/>
     </target>
     <target depends="init,javadoc-build,javadoc-browse" description="Build Javadoc." name="javadoc"/>
     <!--
@@ -1214,6 +1215,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile-test,-debug-start-debugger-test,-debug-start-debuggee-test" name="debug-test"/>
     <target depends="init,compile-test-single,-debug-start-debugger-test,-debug-start-debuggee-test-method" name="debug-test-method"/>
+    <target depends="debug-test-method" name="debug-single-method"/>
     <target depends="init,-pre-debug-fix,compile-test-single" if="netbeans.home" name="-do-debug-fix-test">
         <ejbjarproject1:nbjpdareload dir="${build.test.classes.dir}"/>
     </target>
